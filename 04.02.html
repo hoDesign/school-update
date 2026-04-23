@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const todos = ['우유 구매', '업무 메일 확인하기', '필라테스 수업']
+        console.log(todos);
+
+        todos.push('저녁 식사 준비하기');
+        todos.push('피아노 연습하기');
+
+        console.log(todos);
+
+        const fruitsA = ['사과', '배', '포도', '바나나']
+        console.log(fruitsA);
+        fruitsA[10] = '귤';
+        console.log(fruitsA);
+
+        const fruitsB = ['딸기', '복숭아', '키위'];
+        fruitsB[fruitsB.length] = '복숭아';
+        console.log(fruitsB);
+
+        const itemsA = ['돈', '두', '댓'];
+        console.log(itemsA);
+        itemsA.splice(2,1);
+        console.log(itemsA);
+        itemsA.push('돈');
+        console.log(itemsA);
+        itemsA.push('두');
+        console.log(itemsA);
+
+        itemsA.splice(itemsA.length-1,1);
+        console.log(itemsA);
+
+        const itemsB = ['사과', '배', '바나나']; 
+        const index = itemsB.indexOf('바나나');
+        
+        console.log(`바나나의 인덱스 번호는 ${index}`)
+
+        const itemsC = ['금', '은', '동', '구리', 206]
+        itemsC.splice(1,1,'금');
+        console.log(itemsC);
+
+        const a = '안녕';
+        const b = '하세요';
+
+        const d = a + b;
+        console.log(d);
+        console.log(a);
+        console.log(b);
+
+        for (const i in todos)
+            console.log(`${i}번째 할 일: ${todos[i]}`)
+
+        for (const todo of todos){
+            console.log(`오늘의 할 일: ${todos}`)
+        }
+
+        for (
+            let i = 0;
+            i < 5;
+            i ++
+        ){console.log(`${i}번째 반복입니다.`)}
+
+        let output = 0;
+        for (
+            let i=1;
+            i<=100; 
+            i++
+        ){
+            output += i;
+        }console.log(`1~100까지의 숫자를 모두 더하면 ${output}입니다.`)
+        
+        // 04.09
+
+        for (let i = 0; i<todos.length; 1++) {
+            console.log(`${i}번째 할 일: ${todos[i]}`)
+        }
+    </script>
+</body>
+</html>
