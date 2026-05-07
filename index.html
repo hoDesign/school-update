@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Maze: Particle Explosion</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Pretendard', sans-serif;
+            cursor: none; /* 커스텀 효과를 위해 실제 마우스는 숨김 */
+        }
+
+        /* 미로 벽 */
+        .wall {
+            position: absolute;
+            background-color: #333;
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
+            z-index: 5;
+        }
+
+        .portal {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        #start { top: 20px; left: 20px; background: rgba(46, 204, 113, 0.4); border: 2px solid #2ecc71; }
+        #end { bottom: 20px; right: 20px; background: rgba(231, 76, 60, 0.4); border: 2px solid #e74c3c; }
+
+        /* 폭발 효과를 위한 캔버스 */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 2000;
+        }
+        
+        button {
+            padding: 12px 30px; font-size: 18px; background: #2ecc71; border: none;
+            color: white; border-radius: 8px; cursor: pointer; margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+    <div id="start" class="portal">START</div>
+    <div id="end" class="portal">GOAL</div>
+    <div id="maze-container"></div>
+
+    <div id="overlay">
+        <h1 id="result-title">💥 폭발함!</h1>
+        <button onclick="location.reload()">다시 도전</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('maze-container');
+        const overlay = document.getElementById('overlay');
+        
+        let isGameRunning = false;
+        let rotate = 0;
+        let particles = [];
+
+        // 캔버스 크기 설정
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 1. 미로 벽 생성 (탈출 가능 경로)
+        const wallData = [
+            [150, 0, 10, 400], [0, 500, 300, 10], [300, 200, 10, 600],
+            [450, 0, 10, 400], [450, 500, 400, 10], [600, 200, 10, 300],
+            [800, 0, 10, 700], [0, 850, 1000, 10], [1000, 150, 10, 850]
+        ];
+
+        wallData.forEach(d => {
+            const wall = document.createElement('div');
+            wall.className = 'wall';
+            wall.style.left = d[0] + 'px'; wall.style.top = d[1] + 'px';
+            wall.style.width = d[2] + 'px'; wall.style.height = d[3] + 'px';
+            
+            wall.addEventListener('mouseenter', (e) => {
+                if(isGameRunning) explode(e.clientX, e.clientY);
+            });
+            container.appendChild(wall);
+        });
+
+        // 2. 파티클 클래스 (폭발 효과)
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 8 + 2;
+                this.speedX = (Math.random() - 0.5) * 15;
+                this.speedY = (Math.random() - 0.5) * 15;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                this.opacity = 1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.opacity -= 0.02;
+            }
+            draw() {
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function explode(x, y) {
+            isGameRunning = false;
+            for(let i = 0; i < 50; i++) {
+                particles.push(new Particle(x, y));
+            }
+            setTimeout(() => {
+                overlay.style.display = 'flex';
+            }, 1000);
+        }
+
+        // 3. 핵심 스크립트: 마우스 이동 & 무한 로테이트 잔상
+        document.addEventListener('mousemove', function(event){
+            if(!isGameRunning) return;
+
+            const box = document.createElement('div');
+            box.className = 'trail';
+            box.style.position = 'absolute';
+            box.style.width = '40px'; box.style.height = '40px';
+            box.style.backgroundColor = `rgba(${Math.ceil(Math.random()*255)}, ${Math.ceil(Math.random()*255)}, ${Math.ceil(Math.random()*255)}, 0.4)`;
+            box.style.top = `${event.clientY - 20}px`;
+            box.style.left = `${event.clientX - 20}px`;
+            box.style.borderRadius = '5px';
+            box.style.pointerEvents = 'none';
+
+            document.body.appendChild(box);
+            setTimeout(() => box.remove(), 800);
+        });
+
+        function animate(){
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 파티클 애니메이션
+            particles.forEach((p, i) => {
+                p.update();
+                p.draw();
+                if(p.opacity <= 0) particles.splice(i, 1);
+            });
+
+            // 잔상 로테이트
+            let trails = document.querySelectorAll('.trail');
+            rotate += 4;
+            trails.forEach(t => t.style.transform = `rotate(${rotate}deg)`);
+        }
+        animate();
+
+        // 4. 게임 제어
+        document.getElementById('start').addEventListener('mouseenter', () => {
+            isGameRunning = true;
+        });
+
+        document.getElementById('end').addEventListener('mouseenter', () => {
+            if(isGameRunning) {
+                isGameRunning = false;
+                document.getElementById('result-title').innerText = "🏆 탈출 성공!";
+                overlay.style.display = 'flex';
+            }
+        });
+    </script>
+</body>
+</html>
