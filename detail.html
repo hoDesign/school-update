@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Detail</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #050508;
+  color: #fff;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+  opacity: 0;
+  animation: fadeIn 0.5s ease 0.1s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+#back {
+  position: fixed;
+  top: 36px;
+  left: 36px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+  z-index: 100;
+}
+#back:hover { color: rgba(255,255,255,0.9); }
+
+#content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0.15;
+}
+
+#content p {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<a id="back" href="card-carousel.html">← Back</a>
+
+<div id="content">
+  <p id="card-title">Project Detail</p>
+  <p>Content coming soon</p>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const title  = params.get('title');
+if (title) document.getElementById('card-title').textContent = decodeURIComponent(title);
+</script>
+</body>
+</html>

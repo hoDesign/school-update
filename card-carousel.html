@@ -360,7 +360,13 @@ CARD_DATA.forEach((d, i) => {
   card.addEventListener('click', () => {
     if (drag.moved) return;
     if (state.mode !== 'carousel') return;
-    rotateToCenter(i);
+    if (focusedCardEl === card) {
+      triggerSlingshot(card, true, CARD_DATA[i]);
+    } else if (focusedCardEl) {
+      triggerSlingshot(focusedCardEl, false, null);
+    } else {
+      rotateToCenter(i);
+    }
   });
 
   carouselEl.appendChild(card);
@@ -579,6 +585,7 @@ function restoreAllCards() {
 }
 
 function resumeRotation() {
+  centerTimer = null;
   restoreAllCards();
   cardCtaEl.classList.remove('show');
   focusedCardEl = null;
@@ -588,14 +595,79 @@ function resumeRotation() {
   state.rafId  = requestAnimationFrame(autoLoop);
 }
 
-// CTA click → push adjacent cards
+// ── SLINGSHOT ───────────────────────────────────────────
+function triggerSlingshot(card, navigate, cardData) {
+  clearTimeout(centerTimer); centerTimer = null;
+  document.removeEventListener('click', onOutsideClick, true);
+  cardCtaEl.classList.remove('show');
+  focusedCardEl = null;
+
+  const base = card.dataset.baseTransform;
+
+  // Full-screen overlay for page transition
+  const overlay = navigate ? document.createElement('div') : null;
+  if (overlay) {
+    overlay.style.cssText = `
+      position:fixed;inset:0;background:#050508;
+      opacity:0;z-index:500;pointer-events:none;
+      transition:opacity 0.55s ease;
+    `;
+    document.body.appendChild(overlay);
+  }
+
+  const PULL_DUR  = 320;
+  const SHOOT_DUR = 800;
+  const TOTAL     = PULL_DUR + SHOOT_DUR;
+  const t0 = performance.now();
+  let overlayStarted = false;
+
+  function animate(ts) {
+    const t = ts - t0;
+
+    // Phase 1 — pull down (크기 유지)
+    if (t < PULL_DUR) {
+      const ease = Math.pow(t / PULL_DUR, 2);
+      card.style.transform = `${base} scale(1.2) translateY(${(ease * 22).toFixed(1)}px)`;
+      requestAnimationFrame(animate);
+      return;
+    }
+
+    // Fade starts at pull peak
+    if (overlay && !overlayStarted) {
+      overlayStarted = true;
+      requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+    }
+
+    // Phase 2 — shoot up (크기 유지, translateY만)
+    if (t < TOTAL) {
+      const p    = (t - PULL_DUR) / SHOOT_DUR;
+      const ease = 1 - Math.pow(1 - p, 2);
+      card.style.transform = `${base} scale(1.2) translateY(${(22 - ease * 450).toFixed(1)}px)`;
+      requestAnimationFrame(animate);
+      return;
+    }
+
+    if (navigate && cardData) {
+      // 완전 암흑 확보 후 이동
+      const url = `detail.html?id=${cardData.id}&title=${encodeURIComponent(cardData.title)}`;
+      setTimeout(() => { window.location.href = url; }, 200);
+    } else {
+      // 이펙트만 — 원복 후 회전 재개
+      card.style.transition = 'transform 0.3s ease';
+      card.style.transform  = base;
+      setTimeout(() => { card.style.transition = ''; scheduleResume(); }, 300);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// CTA click → slingshot + page transition
 cardCtaEl.addEventListener('click', e => {
   e.stopPropagation();
   if (!focusedCardEl) return;
   const idx = carouselCards.indexOf(focusedCardEl);
-  pushAdjacentCards(idx);
-  clearTimeout(centerTimer);
-  centerTimer = setTimeout(resumeRotation, 1800);
+  triggerSlingshot(focusedCardEl, true, CARD_DATA[idx]);
 });
 
 function onOutsideClick(e) {
@@ -609,8 +681,8 @@ function rotateToCenter(cardIndex) {
   cancelAnimationFrame(state.rafId);
   cancelAnimationFrame(momentumRaf);
   cancelAnimationFrame(centerRaf);
-  clearTimeout(centerTimer);
-  clearTimeout(resumeTimer); // 스크롤/스와이프 재개 타이머 취소
+  clearTimeout(centerTimer);  centerTimer = null;
+  clearTimeout(resumeTimer);  resumeTimer = null;
   document.removeEventListener('click', onOutsideClick, true);
   pauseAuto();
 
