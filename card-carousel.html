@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Card Carousel</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: radial-gradient(ellipse at 50% 60%, #12122a 0%, #050508 70%);
+  background-attachment: fixed;
+  color: #fff;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  user-select: none;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%; height: 35%;
+  background: linear-gradient(to top, rgba(30,30,80,0.18) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SCENE ──────────────────────────────── */
+#scene {
+  position: fixed;
+  top: 50%; left: 50%;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.5s ease;
+  z-index: 10;
+}
+
+#carousel {
+  position: relative;
+  width: 0; height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ── CAROUSEL CARDS ─────────────────────── */
+.card {
+  position: absolute;
+  width: 200px;
+  height: 280px;
+  margin-left: -100px;
+  margin-top: -140px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  backface-visibility: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s;
+  contain: layout style;
+  will-change: transform, filter;
+}
+
+/* lighting overlay — curvature illusion */
+.card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.07) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(0,0,0,0.25) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 2;
+}
+
+.card-top {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+
+.card-body {
+  flex: none;
+  height: 25%;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: rgba(0,0,0,0.35);
+  transition: opacity 0.15s;
+  position: relative; z-index: 1;
+}
+
+.card-num  { font-size: 10px; letter-spacing: 2px; opacity: 0.35; margin-bottom: 6px; text-transform: uppercase; }
+.card-title{ font-size: 13px; font-weight: 600; letter-spacing: 0.3px; line-height: 1.4; }
+.card-sub  { font-size: 10px; opacity: 0.35; margin-top: 4px; letter-spacing: 0.5px; }
+
+/* 썸네일 있는 카드 — 레이아웃은 공통, 배경/오버레이만 다름 */
+.has-img::after { display: none; }
+.has-img { box-shadow: none !important; }
+.has-img .card-top { background: #f0f0f2; padding: 0; }
+.has-img .card-top img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* ── GRID ───────────────────────────────── */
+/*
+  Grid = normal document flow. Body overflow toggled via JS.
+  Cards: golden ratio 1:1.618, 1920px ref → 597px wide.
+  Responsive: padding absorbs width reduction first, then cards shrink.
+*/
+#grid {
+  display: none;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-content: start;
+  padding: 80px 13vw 120px;
+}
+
+#grid.show {
+  display: grid;
+  animation: fadeInUp 0.5s ease both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.grid-card {
+  aspect-ratio: 1 / 1.618;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, border-color 0.25s;
+  /* box-shadow set via --glow CSS var */
+}
+
+.grid-card:hover {
+  transform: scale(1.02) translateY(-3px);
+  border-color: rgba(255,255,255,0.2);
+  box-shadow: 0 0 50px 14px var(--glow, rgba(100,100,255,0.3));
+}
+
+.grid-card .card-top { flex: 1; height: auto; }
+.grid-card .card-body { flex: none; height: 25%; padding: 1.2vw 1.4vw; }
+.grid-card .card-title { font-size: 1.4vw; }
+.grid-card .card-sub   { font-size: 1vw; }
+
+/* ── HUD ────────────────────────────────── */
+#hud {
+  position: fixed;
+  bottom: 36px; right: 36px;
+  z-index: 200;
+}
+
+.btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.85);
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  font-size: 12px;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* ── INDICATOR ──────────────────────────── */
+#indicator {
+  position: fixed;
+  bottom: 36px; left: 36px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.5px;
+  z-index: 200;
+  line-height: 1.8;
+  transition: opacity 0.4s ease;
+}
+
+.progress-bar {
+  width: 120px; height: 2px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 1px;
+  margin-top: 6px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: rgba(120,120,255,0.6);
+  border-radius: 1px;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* ── CARD FOCUS CTA ─────────────────────── */
+#card-cta {
+  position: fixed;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.85);
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transition: opacity 0.35s ease;
+  z-index: 200;
+  white-space: nowrap;
+}
+#card-cta.show {
+  opacity: 1;
+  pointer-events: all;
+  animation: ctaPulse 1.3s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%,100% { transform: translateX(-50%) scale(1);    opacity: 0.6; }
+  50%      { transform: translateX(-50%) scale(1.08); opacity: 1;   }
+}
+
+/* ── SCROLL HINT ────────────────────────── */
+#scroll-hint {
+  position: fixed;
+  top: 36px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  z-index: 200;
+  transition: opacity 0.5s;
+}
+</style>
+</head>
+<body>
+
+<div id="scene">
+  <div id="carousel"></div>
+</div>
+
+<div id="card-cta">ONE MORE CLICK &nbsp;🖱️</div>
+
+<div id="grid"></div>
+
+<div id="indicator">
+  <div id="ind-text">↻ Auto rotating</div>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+</div>
+
+<div id="hud">
+  <button class="btn" id="toggleBtn">▦ &nbsp;Grid view</button>
+</div>
+
+<div id="scroll-hint">scroll to rotate</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+const CARD_COUNT      = 12;
+const CARD_W          = 200;
+const CARD_H          = 280;
+// Gap between adjacent cards ≈ 45px  →  r = (CARD_W/2 + 22.5) / tan(π/12)
+const RADIUS          = Math.round((CARD_W / 2 + 22) / Math.tan(Math.PI / CARD_COUNT)); // ~456px
+const DEG_PER_CARD    = 360 / CARD_COUNT; // 30°
+const MS_PER_ROTATION = 36000;
+const DEG_PER_MS      = 360 / MS_PER_ROTATION;
+const GRID_THRESHOLD  = 3 * 360; // 1080°
+
+// Brighter accent colors (used for glow)
+const PALETTES = [
+  { bg: ['#1a1040','#2d1b69'], glow: '#4a30b8' },
+  { bg: ['#0d1f3c','#1a3a6b'], glow: '#2a5aad' },
+  { bg: ['#1f0d2e','#4a1a6b'], glow: '#7a2ab8' },
+  { bg: ['#0d2e1f','#1a6b3a'], glow: '#28a85d' },
+  { bg: ['#2e1f0d','#6b4a1a'], glow: '#b87a28' },
+  { bg: ['#2e0d0d','#6b1a1a'], glow: '#b82828' },
+  { bg: ['#0d2e2e','#1a6b6b'], glow: '#28b8b8' },
+  { bg: ['#1f1f0d','#5a5a1a'], glow: '#9a9a28' },
+  { bg: ['#1a0d2e','#3a1a6b'], glow: '#5a2ab8' },
+  { bg: ['#0d1f2e','#1a4a6b'], glow: '#2870b8' },
+  { bg: ['#2e0d1f','#6b1a3a'], glow: '#b82870' },
+  { bg: ['#1f2e0d','#4a6b1a'], glow: '#70b828' },
+];
+
+const CARD_DATA = Array.from({length: CARD_COUNT}, (_, i) => ({
+  id: i + 1,
+  num: String(i + 1).padStart(2, '0'),
+  title: `Project ${String(i + 1).padStart(2, '0')}`,
+  sub: '2025 · Design',
+  palette: PALETTES[i],
+  img: null,
+}));
+
+// 카드별 데이터 오버라이드
+CARD_DATA[0].title = 'KT멤버십 UXUI리디자인';
+CARD_DATA[0].img   = 'images/01_kt-membership.jpg';
+
+// ── STATE ───────────────────────────────────────────────
+const state = {
+  mode: 'carousel',
+  angle: 0,
+  autoOn: true,
+  autoAccum: 0,
+  scrollAccum: 0,
+  lastTs: null,
+  rafId: null,
+};
+
+// ── BUILD CAROUSEL CARDS ────────────────────────────────
+const carouselEl    = document.getElementById('carousel');
+const carouselCards = [];
+const cardBodies    = []; // cached card-body elements
+const filterCache   = new Array(CARD_COUNT).fill('');
+const opacityCache  = new Array(CARD_COUNT).fill('1');
+
+CARD_DATA.forEach((d, i) => {
+  const card = document.createElement('div');
+  card.className = d.img ? 'card has-img' : 'card';
+  card.style.background = d.img ? 'transparent' : `linear-gradient(160deg, ${d.palette.bg[0]} 0%, ${d.palette.bg[1]} 100%)`;
+  const baseTransform = `rotateY(${i * DEG_PER_CARD}deg) translateZ(${RADIUS}px)`;
+  card.style.transform = baseTransform;
+  card.dataset.baseTransform = baseTransform;
+  card.innerHTML = `
+    <div class="card-top">${d.img ? `<img src="${d.img}" alt="${d.title}">` : ''}</div>
+    <div class="card-body">
+      <div class="card-title">${d.title}</div>
+      <div class="card-sub">${d.sub}</div>
+    </div>`;
+
+  // Dynamic hover glow using card's own color
+  const glowRgb = hexToRgb(d.palette.glow);
+  card.addEventListener('mouseenter', () => {
+    card.style.boxShadow = `0 0 55px 16px rgba(${glowRgb},0.45), inset 1px 0 0 rgba(255,255,255,0.1)`;
+    card.style.borderColor = `rgba(255,255,255,0.22)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.boxShadow = '';
+    card.style.borderColor = '';
+  });
+
+  card.addEventListener('click', () => {
+    if (drag.moved) return;
+    if (state.mode !== 'carousel') return;
+    rotateToCenter(i);
+  });
+
+  carouselEl.appendChild(card);
+  carouselCards.push(card);
+  cardBodies.push(card.querySelector('.card-body'));
+});
+
+// ── BUILD GRID CARDS ────────────────────────────────────
+const gridEl = document.getElementById('grid');
+CARD_DATA.forEach((d) => {
+  const card = document.createElement('div');
+  card.className = d.img ? 'grid-card has-img' : 'grid-card';
+  card.style.background = d.img ? 'transparent' : `linear-gradient(160deg, ${d.palette.bg[0]} 0%, ${d.palette.bg[1]} 100%)`;
+  // CSS var for hover glow
+  card.style.setProperty('--glow', `rgba(${hexToRgb(d.palette.glow)},0.4)`);
+  card.innerHTML = `
+    <div class="card-top">${d.img ? `<img src="${d.img}" alt="${d.title}">` : ''}</div>
+    <div class="card-body">
+      <div class="card-title">${d.title}</div>
+      <div class="card-sub">${d.sub}</div>
+    </div>`;
+  gridEl.appendChild(card);
+});
+
+// ── HELPERS ─────────────────────────────────────────────
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `${r},${g},${b}`;
+}
+
+// ── PER-FRAME CARD FILTER (back blur + invert + text hide) ──
+function updateCardFilters() {
+  for (let i = 0; i < CARD_COUNT; i++) {
+    let ea = ((i * DEG_PER_CARD + state.angle) % 360 + 360) % 360;
+    if (ea > 180) ea = 360 - ea;
+
+    const backFactor = Math.max(0, (ea - 90) / 90);
+
+    const newFilter = backFactor === 0
+      ? 'none'
+      : `blur(${(backFactor * 7).toFixed(1)}px) invert(${(backFactor * 0.85).toFixed(2)})`;
+    if (filterCache[i] !== newFilter) {
+      carouselCards[i].style.filter = newFilter;
+      filterCache[i] = newFilter;
+    }
+
+    const newOpacity = Math.max(0, 1 - backFactor * 4).toFixed(2);
+    if (opacityCache[i] !== newOpacity) {
+      cardBodies[i].style.opacity = newOpacity;
+      opacityCache[i] = newOpacity;
+    }
+  }
+}
+
+// ── RENDER ──────────────────────────────────────────────
+function applyAngle(deg) {
+  state.angle = deg;
+  carouselEl.style.transform = `rotateY(${deg}deg)`;
+  updateCardFilters();
+}
+
+const indTextEl  = document.getElementById('ind-text');
+const progressEl = document.getElementById('progress');
+let lastIndText = '', lastPct = -1;
+function updateIndicator(text, pct) {
+  const p = Math.min(100, pct);
+  if (text !== lastIndText) { indTextEl.textContent = text; lastIndText = text; }
+  if (Math.abs(p - lastPct) > 0.2) { progressEl.style.width = p + '%'; lastPct = p; }
+}
+
+// ── TRANSITIONS ─────────────────────────────────────────
+function toGrid() {
+  if (state.mode === 'grid') return;
+  state.mode = 'grid';
+  state.autoOn = false;
+  cancelAnimationFrame(state.rafId);
+
+  // Fade out carousel scene, then hide it
+  const sceneEl = document.getElementById('scene');
+  sceneEl.style.opacity = '0';
+  sceneEl.style.pointerEvents = 'none';
+  setTimeout(() => { sceneEl.style.display = 'none'; }, 500);
+
+  // Switch body to normal scrollable page
+  document.body.style.overflow = 'auto';
+  document.body.style.height = 'auto';
+
+  gridEl.classList.add('show');
+  document.getElementById('toggleBtn').textContent = '↻  Carousel';
+  document.getElementById('scroll-hint').style.opacity = '0';
+  document.getElementById('indicator').style.opacity = '0';
+}
+
+function toCarousel() {
+  if (state.mode === 'carousel') return;
+  state.mode = 'carousel';
+
+  // Restore body to locked carousel viewport
+  document.body.style.overflow = 'hidden';
+  document.body.style.height = '100vh';
+  window.scrollTo(0, 0);
+
+  const sceneEl = document.getElementById('scene');
+  sceneEl.style.display = '';
+  requestAnimationFrame(() => {
+    sceneEl.style.opacity = '1';
+    sceneEl.style.pointerEvents = '';
+  });
+
+  gridEl.classList.remove('show');
+  document.getElementById('toggleBtn').textContent = '▦  Grid view';
+  document.getElementById('scroll-hint').style.opacity = '1';
+  document.getElementById('indicator').style.opacity = '1';
+
+  state.autoAccum = 0;
+  state.scrollAccum = 0;
+  state.autoOn = true;
+  state.lastTs = null;
+  state.rafId = requestAnimationFrame(autoLoop);
+}
+
+// ── AUTO-ROTATE LOOP ────────────────────────────────────
+function autoLoop(ts) {
+  if (!state.autoOn) return;
+  if (state.lastTs === null) state.lastTs = ts;
+
+  const dt = ts - state.lastTs;
+  state.lastTs = ts;
+
+  const step = DEG_PER_MS * dt;
+  state.autoAccum += step;
+  applyAngle(state.angle - step);
+
+  const pct  = (state.autoAccum / GRID_THRESHOLD) * 100;
+  const rots = (state.autoAccum / 360).toFixed(2);
+  updateIndicator(`↻ Auto  ${rots} / 4 rotations`, pct);
+
+  if (state.autoAccum >= GRID_THRESHOLD) { toGrid(); return; }
+  state.rafId = requestAnimationFrame(autoLoop);
+}
+
+// ── SHARED PAUSE / RESUME ───────────────────────────────
+const SCROLL_SENS = 0.08;
+const DRAG_SENS   = 0.034;
+let resumeTimer = null;
+
+function pauseAuto() {
+  if (state.autoOn) {
+    state.autoOn = false;
+    cancelAnimationFrame(state.rafId);
+    state.lastTs = null;
+  }
+}
+
+function scheduleResume() {
+  clearTimeout(resumeTimer);
+  resumeTimer = setTimeout(() => {
+    if (state.mode === 'carousel' && !focusedCardEl && !centerTimer) {
+      state.autoOn = true;
+      state.lastTs = null;
+      state.rafId = requestAnimationFrame(autoLoop);
+    }
+  }, 150);
+}
+
+function rotateBy(dx, isCCW) {
+  applyAngle(state.angle + dx);
+  if (isCCW) {
+    state.scrollAccum += Math.abs(dx);
+    const pct  = (state.scrollAccum / GRID_THRESHOLD) * 100;
+    const rots = (state.scrollAccum / 360).toFixed(2);
+    updateIndicator(`↺ CCW  ${rots} / 4 rotations`, pct);
+    if (state.scrollAccum >= GRID_THRESHOLD) { toGrid(); }
+  } else {
+    state.scrollAccum = Math.max(0, state.scrollAccum - Math.abs(dx));
+    const rots = (state.scrollAccum / 360).toFixed(2);
+    updateIndicator(`↻ CW  ${rots} / 4 CCW`, (state.scrollAccum / GRID_THRESHOLD) * 100);
+  }
+}
+
+// ── SCROLL ──────────────────────────────────────────────
+window.addEventListener('wheel', e => {
+  if (state.mode === 'grid') return;
+  e.preventDefault();
+  pauseAuto();
+  scheduleResume();
+  const delta = e.deltaY * SCROLL_SENS;
+  rotateBy(-delta, delta > 0);
+}, { passive: false });
+
+// ── ROTATE TO CENTER ────────────────────────────────────
+let centerTimer   = null;
+let centerRaf     = null;
+let focusedCardEl = null;
+
+const cardCtaEl = document.getElementById('card-cta');
+
+function pushAdjacentCards(centerIdx) {
+  // Push ±1 and ±2 neighbours outward
+  [[1, 26],[2, 17],[-1,-26],[-2,-17]].forEach(([offset, extra]) => {
+    const idx  = ((centerIdx + offset) % CARD_COUNT + CARD_COUNT) % CARD_COUNT;
+    const card = carouselCards[idx];
+    card.style.transition = 'transform 0.45s cubic-bezier(0.25,1,0.5,1)';
+    card.style.transform  = `rotateY(${idx * DEG_PER_CARD + extra}deg) translateZ(${RADIUS}px)`;
+  });
+}
+
+function restoreAllCards() {
+  carouselCards.forEach(card => {
+    card.style.transition = 'transform 0.35s ease';
+    card.style.transform  = card.dataset.baseTransform;
+    setTimeout(() => { card.style.transition = ''; }, 350);
+  });
+}
+
+function resumeRotation() {
+  restoreAllCards();
+  cardCtaEl.classList.remove('show');
+  focusedCardEl = null;
+  document.removeEventListener('click', onOutsideClick, true);
+  state.autoOn = true;
+  state.lastTs = null;
+  state.rafId  = requestAnimationFrame(autoLoop);
+}
+
+// CTA click → push adjacent cards
+cardCtaEl.addEventListener('click', e => {
+  e.stopPropagation();
+  if (!focusedCardEl) return;
+  const idx = carouselCards.indexOf(focusedCardEl);
+  pushAdjacentCards(idx);
+  clearTimeout(centerTimer);
+  centerTimer = setTimeout(resumeRotation, 1800);
+});
+
+function onOutsideClick(e) {
+  // If click is on the focused card itself, ignore
+  if (focusedCardEl && focusedCardEl.contains(e.target)) return;
+  clearTimeout(centerTimer);
+  resumeRotation();
+}
+
+function rotateToCenter(cardIndex) {
+  cancelAnimationFrame(state.rafId);
+  cancelAnimationFrame(momentumRaf);
+  cancelAnimationFrame(centerRaf);
+  clearTimeout(centerTimer);
+  clearTimeout(resumeTimer); // 스크롤/스와이프 재개 타이머 취소
+  document.removeEventListener('click', onOutsideClick, true);
+  pauseAuto();
+
+  const rawTarget = -(cardIndex * DEG_PER_CARD);
+  let diff = rawTarget - state.angle;
+  diff = ((diff + 180) % 360 + 360) % 360 - 180;
+
+  const startAngle = state.angle;
+  const startTime  = performance.now();
+  const DURATION   = 650;
+
+  function step(ts) {
+    const t    = Math.min((ts - startTime) / DURATION, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    applyAngle(startAngle + diff * ease);
+    if (t < 1) { centerRaf = requestAnimationFrame(step); return; }
+
+    // Arrived — scale up card + show CTA
+    focusedCardEl = carouselCards[cardIndex];
+    focusedCardEl.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+    focusedCardEl.style.transform  = `${focusedCardEl.dataset.baseTransform} scale(1.2)`;
+    setTimeout(() => { if (focusedCardEl) focusedCardEl.style.transition = ''; }, 300);
+    cardCtaEl.classList.add('show');
+
+    document.addEventListener('click', onOutsideClick, true);
+    centerTimer = setTimeout(resumeRotation, 5000);
+  }
+  centerRaf = requestAnimationFrame(step);
+}
+
+// ── DRAG ────────────────────────────────────────────────
+const drag = { active: false, lastX: 0, velPx: 0, lastT: 0, moved: false };
+let momentumRaf = null;
+
+const sceneEl = document.getElementById('scene');
+sceneEl.style.cursor = 'grab';
+
+function startMomentum(velPx) {
+  cancelAnimationFrame(momentumRaf);
+  let v = velPx * 0.55; // deg/ms
+  let lastTs = null;
+  let totalRot = 0;
+  const MAX_ROT = 180;
+  const FRICTION = 0.993;
+
+  function step(ts) {
+    if (lastTs === null) { lastTs = ts; momentumRaf = requestAnimationFrame(step); return; }
+    const dt = Math.min(ts - lastTs, 32);
+    lastTs = ts;
+
+    let delta = v * dt;
+    const remaining = MAX_ROT - totalRot;
+
+    // Clamp to remaining budget
+    if (Math.abs(delta) >= remaining) {
+      delta = Math.sign(delta) * remaining;
+      rotateBy(delta, delta < 0);
+      scheduleResume();
+      return;
+    }
+
+    totalRot += Math.abs(delta);
+    rotateBy(delta, delta < 0);
+    v *= Math.pow(FRICTION, dt);
+    if (Math.abs(v) < 0.003) { scheduleResume(); return; }
+    momentumRaf = requestAnimationFrame(step);
+  }
+  momentumRaf = requestAnimationFrame(step);
+}
+
+function onDragMove(clientX) {
+  const now = performance.now();
+  const dt  = Math.max(now - drag.lastT, 1);
+  const dx  = clientX - drag.lastX;
+  if (Math.abs(dx) > 3) drag.moved = true;
+  drag.velPx = dx / dt;
+  drag.lastX = clientX;
+  drag.lastT = now;
+  rotateBy(dx * DRAG_SENS, dx < 0);
+}
+
+function onDragEnd() {
+  if (!drag.active) return;
+  drag.active = false;
+  sceneEl.style.cursor = 'grab';
+  if (Math.abs(drag.velPx) > 0.3) {
+    startMomentum(drag.velPx);
+  } else {
+    scheduleResume();
+  }
+}
+
+sceneEl.addEventListener('mousedown', e => {
+  if (state.mode !== 'carousel') return;
+  cancelAnimationFrame(momentumRaf);
+  drag.active = true;
+  drag.moved  = false;
+  drag.lastX  = e.clientX;
+  drag.lastT  = performance.now();
+  drag.velPx  = 0;
+  sceneEl.style.cursor = 'grabbing';
+  pauseAuto();
+  e.preventDefault();
+});
+
+window.addEventListener('mousemove', e => {
+  if (!drag.active || state.mode !== 'carousel') return;
+  onDragMove(e.clientX);
+});
+
+window.addEventListener('mouseup', onDragEnd);
+
+// touch
+sceneEl.addEventListener('touchstart', e => {
+  if (state.mode !== 'carousel') return;
+  cancelAnimationFrame(momentumRaf);
+  drag.active = true;
+  drag.lastX = e.touches[0].clientX;
+  drag.lastT = performance.now();
+  drag.velPx = 0;
+  pauseAuto();
+}, { passive: true });
+
+window.addEventListener('touchmove', e => {
+  if (!drag.active || state.mode !== 'carousel') return;
+  onDragMove(e.touches[0].clientX);
+}, { passive: true });
+
+window.addEventListener('touchend', onDragEnd);
+
+// ── BUTTON ──────────────────────────────────────────────
+document.getElementById('toggleBtn').addEventListener('click', () => {
+  if (state.mode === 'carousel') toGrid();
+  else toCarousel();
+});
+
+// ── START ───────────────────────────────────────────────
+applyAngle(0); // init filters
+state.rafId = requestAnimationFrame(autoLoop);
+</script>
+</body>
+</html>
