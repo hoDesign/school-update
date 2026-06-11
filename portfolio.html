@@ -609,6 +609,209 @@ section {
   line-height: 1.8;
 }
 
+/* ── BENCHMARKING TABLE ── */
+.bench-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 40px 0;
+  font-size: 13px;
+}
+.bench-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+}
+.bench-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  color: rgba(255,255,255,0.55);
+  line-height: 1.5;
+  vertical-align: top;
+}
+.bench-table tr:first-child td { color: rgba(255,255,255,0.85); font-weight: 500; }
+.bench-table tr.highlight td { background: rgba(192,52,26,0.06); color: rgba(255,255,255,0.75); }
+.bench-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.bench-dot.good  { background: rgba(100,220,140,0.7); }
+.bench-dot.mid   { background: rgba(240,200,80,0.7); }
+.bench-dot.weak  { background: rgba(255,100,100,0.6); }
+
+/* ── IA DIAGRAM ── */
+.ia-diagram {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 40px 0;
+}
+@media (max-width: 700px) { .ia-diagram { grid-template-columns: 1fr; } }
+
+.ia-panel {
+  padding: 28px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.02);
+}
+.ia-panel.ia-before { border-color: rgba(255,80,80,0.15); }
+.ia-panel.ia-after  { border-color: rgba(80,255,160,0.15); }
+.ia-panel-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 16px;
+}
+.ia-tree {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 2.2;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0;
+}
+.ia-tree .nav  { color: rgba(255,255,255,0.85); font-weight: 600; }
+.ia-tree .sub  { color: rgba(255,255,255,0.45); padding-left: 16px; }
+.ia-tree .subsub { color: rgba(255,255,255,0.28); padding-left: 32px; }
+
+/* ── COLOR PALETTE ── */
+.palette-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 32px 0;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.swatch-color {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.swatch-name { font-size: 11px; color: var(--dim); }
+.swatch-hex  { font-size: 10px; color: var(--mute); font-family: monospace; }
+
+/* ── TYPOGRAPHY PREVIEW ── */
+.type-preview {
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.02);
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+}
+.type-row:last-child { border-bottom: none; padding-bottom: 0; }
+.type-meta { width: 140px; flex-shrink: 0; }
+.type-role { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+.type-spec { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 3px; }
+.type-sample { color: rgba(255,255,255,0.75); }
+
+/* ── COMPONENT STATES ── */
+.comp-states {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 32px 0;
+}
+.comp-btn {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--sans);
+  cursor: default;
+}
+.comp-btn.state-default { background: #E03030; color: #fff; border: none; }
+.comp-btn.state-hover   { background: #c02020; color: #fff; border: none; box-shadow: 0 4px 16px rgba(224,48,48,0.4); }
+.comp-btn.state-active  { background: #a01818; color: #fff; border: none; transform: scale(0.97); display: inline-block; }
+.comp-btn.state-disabled{ background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.2); border: 1px solid var(--line); }
+.comp-state-label { font-size: 10px; color: var(--mute); text-align: center; margin-top: 6px; letter-spacing: 0.1em; }
+.comp-state-item { display: flex; flex-direction: column; }
+
+/* ── BEFORE/AFTER SCREENS ── */
+.ba-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 40px 0;
+}
+@media (max-width: 700px) { .ba-grid { grid-template-columns: 1fr; } }
+
+.ba-card {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.ba-card.ba-before { border-color: rgba(255,80,80,0.15); }
+.ba-card.ba-after  { border-color: rgba(80,255,160,0.15); }
+.ba-label {
+  padding: 10px 16px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ba-before .ba-label { color: rgba(255,120,120,0.7); background: rgba(255,80,80,0.06); }
+.ba-after  .ba-label { color: rgba(80,220,140,0.7); background: rgba(80,200,120,0.06); }
+.ba-screen {
+  aspect-ratio: 9 / 16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  opacity: 0.08;
+}
+.ba-before .ba-screen { background: linear-gradient(180deg, #1a1a2e, #16213e); }
+.ba-after  .ba-screen { background: linear-gradient(180deg, #0f0f1a, #1a0a0a); }
+.ba-desc {
+  padding: 16px;
+  font-size: 12px;
+  color: var(--dim);
+  line-height: 1.7;
+  border-top: 1px solid var(--line);
+}
+
+/* ── CONCLUSION METRICS ── */
+.conclusion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 40px 0;
+}
+@media (max-width: 700px) { .conclusion-grid { grid-template-columns: 1fr 1fr; } }
+
+.concl-box {
+  padding: 28px 20px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.concl-num {
+  font-family: var(--serif);
+  font-size: 40px;
+  line-height: 1;
+  color: var(--accent);
+}
+.concl-label { font-size: 12px; color: var(--dim); line-height: 1.6; }
+
 /* ── 4. ABOUT ── */
 #about { padding-bottom: 140px; }
 
@@ -886,199 +1089,473 @@ footer {
       <p class="sec-tag">Case Study — Project 01</p>
       <h2 class="sec-title">KT 멤버십<br><em>Redesign.</em></h2>
     </div>
-    <p class="sec-note">Overview → Problem → Process → Design → Conclusion</p>
+    <p class="sec-note">Overview → Research → IA → Design Concept → Solution → Conclusion</p>
   </div>
 
   <div class="cs-flow">
     <span class="cs-step active">Overview</span>
     <span class="cs-arrow">→</span>
-    <span class="cs-step active">Problem</span>
+    <span class="cs-step active">Research</span>
     <span class="cs-arrow">→</span>
-    <span class="cs-step active">Process</span>
+    <span class="cs-step active">IA</span>
     <span class="cs-arrow">→</span>
-    <span class="cs-step active">Design</span>
+    <span class="cs-step active">Design Concept</span>
+    <span class="cs-arrow">→</span>
+    <span class="cs-step active">Solution</span>
     <span class="cs-arrow">→</span>
     <span class="cs-step active">Conclusion</span>
   </div>
 
-  <!-- 3-1 Overview -->
+  <!-- ① Overview -->
   <div class="cs-block">
-    <p class="cs-block-label">3-1 · Overview</p>
-    <h3 class="cs-block-title">서비스 개요 &<br><em>배경</em></h3>
+    <p class="cs-block-label">01 · Overview</p>
+    <h3 class="cs-block-title">프로젝트 개요 &<br><em>리디자인 목적</em></h3>
+
     <p class="cs-text">
-      KT 멤버십은 KT 통신 가입자를 대상으로 포인트 적립, 할인 쿠폰, 제휴 혜택을 제공하는 앱 서비스입니다.
-      수백만 명의 실사용자를 보유한 서비스임에도 불구하고, 혜택 인지율이 낮고 메뉴 구조가 복잡해 사용자가 실제 혜택을 활용하지 못하는 문제가 반복적으로 제기되었습니다.
-      본 프로젝트는 UX 관점에서 정보 구조를 재설계하고, UI를 현대적으로 개선하여 실질적인 앱 가치 상승을 목표로 합니다.
+      KT 멤버십은 KT 통신 가입자를 위한 포인트·쿠폰·제휴 혜택 앱으로,
+      수백만 명의 실사용자를 보유한 대형 서비스입니다. 그러나 출시 이후 UI가 장기간 유지되면서
+      경쟁 서비스 대비 시각적 노후화와 사용성 저하가 뚜렷해졌습니다.
     </p>
 
     <div class="cs-metrics" style="margin-top: 40px;">
       <div class="metric-box">
-        <div class="metric-num">KT</div>
-        <div class="metric-label">국내 3대 통신사<br>멤버십 앱 서비스</div>
+        <div class="metric-num" style="font-size:32px;">서비스</div>
+        <div class="metric-label">KT 통신 가입자 대상<br>포인트 · 쿠폰 · 제휴 혜택 앱</div>
       </div>
       <div class="metric-box">
-        <div class="metric-num">앱</div>
-        <div class="metric-label">iOS · Android<br>멀티플랫폼 대응</div>
+        <div class="metric-num" style="font-size:32px;">타겟</div>
+        <div class="metric-label">20–40대 KT 가입자<br>혜택 탐색 및 즉시 사용 니즈</div>
       </div>
       <div class="metric-box">
-        <div class="metric-num">4주</div>
-        <div class="metric-label">개인 프로젝트<br>전체 기획 + UI</div>
+        <div class="metric-num" style="font-size:32px;">목적</div>
+        <div class="metric-label">UI 노후화 해소<br>브랜드 쇄신 · 혜택 사용률 제고</div>
       </div>
     </div>
-  </div>
-
-  <!-- 3-2 Problem -->
-  <div class="cs-block">
-    <p class="cs-block-label">3-2 · Problem Definition</p>
-    <h3 class="cs-block-title">무엇이 <em>진짜</em> 문제인가</h3>
-    <p class="cs-text">
-      스토어 리뷰 200건 분석 및 휴리스틱 평가를 통해 핵심 Pain Point를 도출했습니다.
-      "혜택이 있는 줄 몰랐다", "찾기 어렵다", "쓰기 불편하다"는 응답이 전체의 68%를 차지했습니다.
-    </p>
 
     <div class="cs-callout">
       <p>
-        <strong>핵심 인사이트:</strong> 기능이 없는 것이 문제가 아니라, 있는 기능을 발견하지 못하는
-        정보 구조(Information Architecture)가 문제였습니다.
-        사용자는 평균 3.2회의 탭 이동 후에야 원하는 혜택 화면에 도달할 수 있었습니다.
+        <strong>리디자인 배경:</strong> 기존 앱은 출시 후 대규모 개편 없이 기능만 누적되어
+        정보 구조가 비대해졌습니다. 동시에 카카오페이, 네이버플러스 등 경쟁 플랫폼이
+        직관적인 혜택 UX로 사용자 기대치를 끌어올렸고, KT 멤버십은 상대적 열위에 놓이게 되었습니다.
       </p>
     </div>
+  </div>
 
-    <div class="cs-two-col">
+  <!-- ② Research & Analysis -->
+  <div class="cs-block">
+    <p class="cs-block-label">02 · Research &amp; Analysis</p>
+    <h3 class="cs-block-title">현황 분석 &<br><em>문제 도출</em></h3>
+
+    <p class="cs-text">
+      기존 앱을 직접 사용하며 UX/UI 관점의 문제점을 도출하고,
+      유사 서비스 5개를 대상으로 벤치마킹 분석을 진행했습니다.
+    </p>
+
+    <div class="cs-two-col" style="margin-top:40px;">
       <div>
-        <p class="cs-col-label">Before — 주요 문제점</p>
+        <p class="cs-col-label">기존 앱 직접 분석 — Pain Points</p>
         <div class="cs-col-box before">
           <ul>
-            <li>뎁스 3단계 이상의 복잡한 내비게이션</li>
-            <li>혜택 카테고리 분류 기준 불명확</li>
-            <li>포인트 잔액과 사용처 연결 부재</li>
-            <li>시각적 위계(계층) 부재로 CTA 미인지</li>
-            <li>중복된 기능 메뉴로 인한 사용자 혼란</li>
+            <li>홈 화면 정보 과밀 — 핵심 혜택 시인성 낮음</li>
+            <li>Bottom Nav 항목 5개, 기능 중복 혼재</li>
+            <li>포인트 잔액 확인 후 사용까지 탭 3회 이상</li>
+            <li>할인 쿠폰·제휴 혜택 분류 기준 불명확</li>
+            <li>CTA 버튼 크기·컬러 위계 부재</li>
+            <li>구형 타이포그래피, 아이콘 스타일 불통일</li>
           </ul>
         </div>
       </div>
       <div>
-        <p class="cs-col-label">After — 개선 방향</p>
+        <p class="cs-col-label">핵심 인사이트</p>
         <div class="cs-col-box after">
           <ul>
-            <li>핵심 기능 2단계 이내 접근 보장</li>
-            <li>사용 맥락 기반 혜택 카테고라이징</li>
-            <li>포인트 → 즉시 사용 원스텝 플로우</li>
-            <li>명확한 시각 위계로 CTA 강조</li>
-            <li>중복 제거 후 Bottom Nav 재구조화</li>
+            <li>기능 부재가 아닌 <strong style="color:rgba(255,255,255,0.85)">발견 불가</strong>가 문제</li>
+            <li>혜택 도달까지 평균 3.2회 탭 필요</li>
+            <li>경쟁사 대비 홈 첫 화면 정보 밀도 1.8배</li>
+            <li>KT 레드 브랜드 컬러 활용 일관성 부족</li>
+            <li>다크모드·반응형 대응 미비</li>
           </ul>
         </div>
       </div>
     </div>
+
+    <p class="cs-col-label" style="margin-top: 48px;">벤치마킹 분석 — 경쟁사 5개 비교</p>
+    <table class="bench-table">
+      <thead>
+        <tr>
+          <th>서비스</th>
+          <th>IA 구조</th>
+          <th>혜택 탐색성</th>
+          <th>비주얼 완성도</th>
+          <th>KT 대비 시사점</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>KT 멤버십 <small style="color:var(--accent)">(현재)</small></td>
+          <td><span class="bench-dot weak"></span>복잡 (5탭)</td>
+          <td><span class="bench-dot weak"></span>낮음</td>
+          <td><span class="bench-dot weak"></span>노후화</td>
+          <td>전 영역 개선 필요</td>
+        </tr>
+        <tr>
+          <td>카카오페이</td>
+          <td><span class="bench-dot good"></span>단순 (3탭)</td>
+          <td><span class="bench-dot good"></span>높음</td>
+          <td><span class="bench-dot good"></span>현대적</td>
+          <td>IA 단순화 벤치마크</td>
+        </tr>
+        <tr>
+          <td>네이버플러스</td>
+          <td><span class="bench-dot good"></span>맥락 기반</td>
+          <td><span class="bench-dot good"></span>매우 높음</td>
+          <td><span class="bench-dot good"></span>현대적</td>
+          <td>혜택 추천 알고리즘 참조</td>
+        </tr>
+        <tr>
+          <td>SKT T멤버십</td>
+          <td><span class="bench-dot mid"></span>유사 구조</td>
+          <td><span class="bench-dot mid"></span>보통</td>
+          <td><span class="bench-dot mid"></span>보통</td>
+          <td>동급 경쟁, 차별화 필요</td>
+        </tr>
+        <tr>
+          <td>OK캐쉬백</td>
+          <td><span class="bench-dot mid"></span>카테고리형</td>
+          <td><span class="bench-dot good"></span>높음</td>
+          <td><span class="bench-dot mid"></span>보통</td>
+          <td>카테고리 분류체계 참조</td>
+        </tr>
+        <tr>
+          <td>삼성Pay</td>
+          <td><span class="bench-dot good"></span>심플</td>
+          <td><span class="bench-dot mid"></span>보통</td>
+          <td><span class="bench-dot good"></span>높음</td>
+          <td>컴포넌트 완성도 참조</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <!-- 3-3 Process -->
+  <!-- ③ Information Architecture -->
   <div class="cs-block">
-    <p class="cs-block-label">3-3 · UX Strategy &amp; Process</p>
-    <h3 class="cs-block-title">해결 과정 &<br><em>구조 설계</em></h3>
+    <p class="cs-block-label">03 · Information Architecture</p>
+    <h3 class="cs-block-title">구조적 개선 전략 &<br><em>IA 재설계</em></h3>
+
     <p class="cs-text">
-      정보 구조(IA) 재설계를 출발점으로, 핵심 유저 저니맵에서 병목 구간을 특정하고
-      플로우 차트를 통해 최단 경로를 설계했습니다.
+      벤치마킹에서 도출된 인사이트를 바탕으로, 기존 5탭 구조를 3탭으로 통합했습니다.
+      사용자의 실제 사용 흐름("포인트 확인 → 혜택 탐색 → 즉시 사용")을 최우선으로 고려한 재배치입니다.
     </p>
 
-    <div class="cs-process-row">
-      <div class="process-step">
-        <div class="process-step-num">01</div>
-        <div class="process-step-title">리서치</div>
-        <div class="process-step-desc">앱스토어 리뷰 200건 분석 + 휴리스틱 평가 10항목</div>
+    <div class="ia-diagram">
+      <div class="ia-panel ia-before">
+        <p class="ia-panel-label">Before — 기존 IA (5탭 구조)</p>
+        <div class="ia-tree">
+          <div class="nav">홈</div>
+          <div class="sub">├ 이달의 혜택 배너</div>
+          <div class="sub">├ 공지/이벤트</div>
+          <div class="sub">└ 포인트 요약 (묻혀 있음)</div>
+          <div class="nav" style="margin-top:8px">혜택</div>
+          <div class="sub">├ 제휴 할인</div>
+          <div class="sub">│ ├ 외식</div>
+          <div class="sub">│ ├ 쇼핑</div>
+          <div class="sub">│ └ 영화 ···</div>
+          <div class="sub">└ 쿠폰함 (별도)</div>
+          <div class="nav" style="margin-top:8px">포인트</div>
+          <div class="nav" style="margin-top:8px">쇼핑</div>
+          <div class="nav" style="margin-top:8px">MY</div>
+        </div>
       </div>
-      <div class="process-step">
-        <div class="process-step-num">02</div>
-        <div class="process-step-title">IA 재설계</div>
-        <div class="process-step-desc">기존 5개 탭 → 3개 탭으로 통합. 맥락 기반 그룹핑</div>
-      </div>
-      <div class="process-step">
-        <div class="process-step-num">03</div>
-        <div class="process-step-title">와이어프레임</div>
-        <div class="process-step-desc">핵심 플로우 5개 시나리오 작성. 병목 구간 3개 해소</div>
-      </div>
-      <div class="process-step">
-        <div class="process-step-num">04</div>
-        <div class="process-step-title">UI 디자인</div>
-        <div class="process-step-desc">Figma 컴포넌트 시스템 구축. 라이트/다크 대응</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3-4 Design -->
-  <div class="cs-block">
-    <p class="cs-block-label">3-4 · UI Design &amp; Design System</p>
-    <h3 class="cs-block-title">비주얼 &<br><em>시스템</em></h3>
-    <p class="cs-text">
-      Figma Variables와 Auto Layout을 활용해 컴포넌트 라이브러리를 구축했습니다.
-      버튼, 카드, 내비게이션 등 주요 컴포넌트의 Default / Hover / Active / Disabled 상태를 정의하고,
-      타이포그래피 스케일과 컬러 토큰을 체계화했습니다.
-    </p>
-
-    <div class="cs-design-grid">
-      <div class="design-cell design-cell-1">
-        <span class="design-cell-icon">🏠</span>
-        <span class="design-cell-label">홈 — 혜택 피드</span>
-      </div>
-      <div class="design-cell design-cell-2">
-        <span class="design-cell-icon">💳</span>
-        <span class="design-cell-label">포인트 — 원스텝 사용</span>
-      </div>
-      <div class="design-cell design-cell-3">
-        <span class="design-cell-icon">🎁</span>
-        <span class="design-cell-label">혜택 — 맥락 카테고리</span>
-      </div>
-      <div class="design-cell design-cell-4">
-        <span class="design-cell-icon">⚙️</span>
-        <span class="design-cell-label">디자인 시스템 — 컴포넌트</span>
+      <div class="ia-panel ia-after">
+        <p class="ia-panel-label">After — 개선 IA (3탭 구조)</p>
+        <div class="ia-tree">
+          <div class="nav">홈</div>
+          <div class="sub">├ 포인트 카드 (상단 고정)</div>
+          <div class="sub">├ 맞춤 혜택 피드</div>
+          <div class="sub">└ 최근 사용 내역</div>
+          <div class="nav" style="margin-top:8px">혜택</div>
+          <div class="sub">├ 카테고리 탭 (맥락 기반)</div>
+          <div class="sub">│ ├ 식음료 · 쇼핑 · 여가</div>
+          <div class="sub">│ └ 내 위치 주변</div>
+          <div class="sub">└ 쿠폰함 통합</div>
+          <div class="nav" style="margin-top:8px">MY</div>
+          <div class="sub">├ 포인트 상세 · 사용</div>
+          <div class="sub">└ 설정 · 이력</div>
+        </div>
       </div>
     </div>
 
     <div class="cs-callout">
       <p>
-        <strong>반응형 대응:</strong> 컴포넌트 구조를 iOS/Android 가이드라인에 맞게 이중 설계하여
-        플랫폼별 터치 타겟(최소 44px)과 간격 시스템을 별도 정의했습니다.
+        <strong>기능 개선 핵심:</strong> '포인트 확인'과 '혜택 사용'을 홈 화면 단일 플로우로 통합해
+        평균 탭 횟수를 3.2회 → 1.1회로 단축했습니다. 쿠폰함과 제휴 할인을 '혜택' 탭으로 병합해
+        중복 내비게이션을 제거하고, 위치 기반 혜택 피드를 신규 추가했습니다.
       </p>
     </div>
   </div>
 
-  <!-- 3-5 Conclusion -->
+  <!-- ④ Design Concept -->
   <div class="cs-block">
-    <p class="cs-block-label">3-5 · Conclusion &amp; Retrospective</p>
-    <h3 class="cs-block-title">성과 &<br><em>회고</em></h3>
+    <p class="cs-block-label">04 · Design Concept</p>
+    <h3 class="cs-block-title">디자인 컨셉 &<br><em>비주얼 전략</em></h3>
 
-    <div class="cs-metrics">
-      <div class="metric-box">
-        <div class="metric-num" style="font-size: 36px;">−2.1탭</div>
-        <div class="metric-label">핵심 기능 접근까지<br>평균 탭 횟수 감소 (3.2 → 1.1)</div>
+    <p class="cs-text">
+      핵심 키워드: <strong style="color:rgba(255,255,255,0.85)">신뢰감 · 트렌디 · 심플</strong>.
+      KT의 레드 브랜드 컬러를 강하게 살리되, 서브 컬러와 타이포그래피를 현대화해
+      통신사 특유의 신뢰감을 유지하면서 젊은 감성을 더했습니다.
+    </p>
+
+    <p class="cs-col-label" style="margin-top: 40px;">Color Palette</p>
+    <div class="palette-row">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#E03030;"></div>
+        <div class="swatch-name">KT Red</div>
+        <div class="swatch-hex">#E03030</div>
       </div>
-      <div class="metric-box">
-        <div class="metric-num" style="font-size: 36px;">−38%</div>
-        <div class="metric-label">예상 이탈률 감소<br>(태스크 완료율 기준)</div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#C01A1A;"></div>
+        <div class="swatch-name">Deep Red</div>
+        <div class="swatch-hex">#C01A1A</div>
       </div>
-      <div class="metric-box">
-        <div class="metric-num" style="font-size: 36px;">32개</div>
-        <div class="metric-label">Figma 컴포넌트 라이브러리<br>구축 (상태 포함)</div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#FF6B6B;"></div>
+        <div class="swatch-name">Light Red</div>
+        <div class="swatch-hex">#FF6B6B</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0D0D0D;"></div>
+        <div class="swatch-name">Background</div>
+        <div class="swatch-hex">#0D0D0D</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1E1E1E;"></div>
+        <div class="swatch-name">Surface</div>
+        <div class="swatch-hex">#1E1E1E</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#FFFFFF;"></div>
+        <div class="swatch-name">Text Primary</div>
+        <div class="swatch-hex">#FFFFFF</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#8A8A8A; border-color: rgba(255,255,255,0.15);"></div>
+        <div class="swatch-name">Text Secondary</div>
+        <div class="swatch-hex">#8A8A8A</div>
       </div>
     </div>
 
-    <div class="cs-result-row">
-      <div class="result-item">
-        <span class="result-label">기대 비즈니스 효과</span>
-        <p class="result-text">
-          혜택 탐색 경로 단축으로 월간 혜택 사용 건수 약 15% 상승 기대.
-          포인트 소진율 개선을 통한 재방문율 향상.
-          명확한 CTA 설계로 제휴 파트너 수익 기여 증대.
-        </p>
+    <p class="cs-col-label" style="margin-top: 40px;">Typography</p>
+    <div class="type-preview">
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-role">Display / H1</div>
+          <div class="type-spec">Pretendard 700 · 32px · -0.03em</div>
+        </div>
+        <div class="type-sample" style="font-size:32px; font-weight:700; letter-spacing:-0.03em;">내 혜택 한눈에</div>
       </div>
-      <div class="result-item">
-        <span class="result-label">구현 협업 및 회고</span>
-        <p class="result-text">
-          초기 설계안의 탭 전환 인터랙션(모션 블러 효과)은 저사양 기기에서의
-          성능 이슈를 고려해 CSS opacity + translate 조합으로 최적화 방향을 수정했습니다.
-          개발 스펙 문서 작성 과정에서 디자인 토큰의 중요성을 직접 체감했습니다.
-        </p>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-role">Title / H2</div>
+          <div class="type-spec">Pretendard 600 · 20px · -0.02em</div>
+        </div>
+        <div class="type-sample" style="font-size:20px; font-weight:600; letter-spacing:-0.02em;">이달의 추천 혜택</div>
       </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-role">Body</div>
+          <div class="type-spec">Pretendard 400 · 15px · 0em</div>
+        </div>
+        <div class="type-sample" style="font-size:15px; font-weight:400; color:rgba(255,255,255,0.55);">CGV 영화 관람권 최대 6,000원 할인 쿠폰을 지금 받아보세요.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-role">Caption / Label</div>
+          <div class="type-spec">Pretendard 400 · 12px · 0.04em</div>
+        </div>
+        <div class="type-sample" style="font-size:12px; letter-spacing:0.04em; color:rgba(255,255,255,0.35);">2026.06.30 까지 · 1인 1회</div>
+      </div>
+    </div>
+
+    <p class="cs-col-label" style="margin-top: 40px;">Iconography &amp; Components — 버튼 상태 정의</p>
+    <div class="comp-states">
+      <div class="comp-state-item">
+        <button class="comp-btn state-default">혜택 받기</button>
+        <div class="comp-state-label">Default</div>
+      </div>
+      <div class="comp-state-item">
+        <button class="comp-btn state-hover">혜택 받기</button>
+        <div class="comp-state-label">Hover</div>
+      </div>
+      <div class="comp-state-item">
+        <button class="comp-btn state-active">혜택 받기</button>
+        <div class="comp-state-label">Active</div>
+      </div>
+      <div class="comp-state-item">
+        <button class="comp-btn state-disabled">혜택 받기</button>
+        <div class="comp-state-label">Disabled</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ Design Solution -->
+  <div class="cs-block">
+    <p class="cs-block-label">05 · Design Solution</p>
+    <h3 class="cs-block-title">상세 디자인 &<br><em>Before &amp; After</em></h3>
+
+    <p class="cs-text">
+      IA 개선안과 스타일 가이드를 바탕으로 주요 화면을 제작했습니다.
+      Home · Benefit · My Page 3개 핵심 화면의 Before &amp; After를 비교합니다.
+    </p>
+
+    <p class="cs-col-label" style="margin-top:40px;">Home 화면 — 혜택 피드 재구성</p>
+    <div class="ba-grid">
+      <div class="ba-card ba-before">
+        <div class="ba-label">Before</div>
+        <div class="ba-screen" style="font-size:14px; opacity:1; flex-direction:column; gap:6px; padding:16px;">
+          <div style="width:100%; height:14px; background:rgba(255,255,255,0.06); border-radius:3px;"></div>
+          <div style="width:100%; height:80px; background:rgba(255,255,255,0.04); border-radius:6px; margin:4px 0;"></div>
+          <div style="width:100%; height:10px; background:rgba(255,255,255,0.04); border-radius:3px;"></div>
+          <div style="width:80%; height:10px; background:rgba(255,255,255,0.04); border-radius:3px;"></div>
+          <div style="width:100%; height:60px; background:rgba(255,255,255,0.04); border-radius:6px; margin:4px 0;"></div>
+          <div style="width:100%; height:60px; background:rgba(255,255,255,0.04); border-radius:6px;"></div>
+          <div style="width:100%; height:60px; background:rgba(255,255,255,0.04); border-radius:6px;"></div>
+        </div>
+        <div class="ba-desc">정보 과밀. 배너·공지·포인트·혜택이 위계 없이 혼재. 스크롤 부담 높음.</div>
+      </div>
+      <div class="ba-card ba-after">
+        <div class="ba-label">After</div>
+        <div class="ba-screen" style="font-size:14px; opacity:1; flex-direction:column; gap:6px; padding:16px;">
+          <div style="width:100%; height:60px; background:rgba(224,48,48,0.25); border-radius:10px; display:flex; align-items:center; padding:0 12px;"><span style="font-size:11px; color:rgba(255,255,255,0.7);">포인트 카드 (상단 고정)</span></div>
+          <div style="width:100%; height:10px; background:rgba(255,255,255,0.06); border-radius:3px; margin-top:8px;"></div>
+          <div style="display:flex; gap:6px; margin-top:4px;">
+            <div style="flex:1; height:70px; background:rgba(255,255,255,0.04); border-radius:8px;"></div>
+            <div style="flex:1; height:70px; background:rgba(255,255,255,0.04); border-radius:8px;"></div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <div style="flex:1; height:70px; background:rgba(255,255,255,0.04); border-radius:8px;"></div>
+            <div style="flex:1; height:70px; background:rgba(255,255,255,0.04); border-radius:8px;"></div>
+          </div>
+        </div>
+        <div class="ba-desc">포인트 카드 상단 고정. 맞춤 혜택 카드 그리드. 첫 화면에서 즉시 사용 가능.</div>
+      </div>
+    </div>
+
+    <p class="cs-col-label" style="margin-top:40px;">Benefit 화면 — 카테고리 재분류</p>
+    <div class="ba-grid">
+      <div class="ba-card ba-before">
+        <div class="ba-label">Before</div>
+        <div class="ba-screen" style="opacity:1; flex-direction:column; gap:6px; padding:16px;">
+          <div style="display:flex; gap:4px; flex-wrap:wrap;">
+            <div style="height:26px; width:52px; background:rgba(255,255,255,0.06); border-radius:20px;"></div>
+            <div style="height:26px; width:44px; background:rgba(255,255,255,0.04); border-radius:20px;"></div>
+            <div style="height:26px; width:48px; background:rgba(255,255,255,0.04); border-radius:20px;"></div>
+            <div style="height:26px; width:56px; background:rgba(255,255,255,0.04); border-radius:20px;"></div>
+            <div style="height:26px; width:40px; background:rgba(255,255,255,0.04); border-radius:20px;"></div>
+            <div style="height:26px; width:60px; background:rgba(255,255,255,0.04); border-radius:20px;"></div>
+            <div style="height:26px; width:44px; background:rgba(255,255,255,0.04); border-radius:20px;"></div>
+          </div>
+          <div style="height:54px; background:rgba(255,255,255,0.04); border-radius:6px; margin-top:8px;"></div>
+          <div style="height:54px; background:rgba(255,255,255,0.04); border-radius:6px;"></div>
+          <div style="height:54px; background:rgba(255,255,255,0.04); border-radius:6px;"></div>
+        </div>
+        <div class="ba-desc">카테고리 7개 이상 나열. 분류 기준 불명확. 탭 선택 후 재탐색 필요.</div>
+      </div>
+      <div class="ba-card ba-after">
+        <div class="ba-label">After</div>
+        <div class="ba-screen" style="opacity:1; flex-direction:column; gap:6px; padding:16px;">
+          <div style="display:flex; gap:6px;">
+            <div style="height:28px; flex:1; background:rgba(224,48,48,0.3); border-radius:20px;"></div>
+            <div style="height:28px; flex:1; background:rgba(255,255,255,0.06); border-radius:20px;"></div>
+            <div style="height:28px; flex:1; background:rgba(255,255,255,0.06); border-radius:20px;"></div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:4px;">
+            <div style="height:80px; background:rgba(255,255,255,0.05); border-radius:10px;"></div>
+            <div style="height:80px; background:rgba(255,255,255,0.05); border-radius:10px;"></div>
+            <div style="height:80px; background:rgba(255,255,255,0.05); border-radius:10px;"></div>
+            <div style="height:80px; background:rgba(255,255,255,0.05); border-radius:10px;"></div>
+          </div>
+        </div>
+        <div class="ba-desc">식음료·쇼핑·여가 3개 탭으로 통합. 카드 그리드로 시인성 향상.</div>
+      </div>
+    </div>
+
+    <p class="cs-col-label" style="margin-top:40px;">My Page — 포인트 원스텝 사용</p>
+    <div class="ba-grid">
+      <div class="ba-card ba-before">
+        <div class="ba-label">Before</div>
+        <div class="ba-screen" style="opacity:1; flex-direction:column; gap:6px; padding:16px;">
+          <div style="height:14px; width:60%; background:rgba(255,255,255,0.06); border-radius:3px;"></div>
+          <div style="height:40px; background:rgba(255,255,255,0.04); border-radius:6px; margin-top:4px;"></div>
+          <div style="height:14px; background:rgba(255,255,255,0.04); border-radius:3px;"></div>
+          <div style="height:14px; width:70%; background:rgba(255,255,255,0.04); border-radius:3px;"></div>
+          <div style="height:32px; background:rgba(255,255,255,0.06); border-radius:6px; margin-top:8px;"></div>
+          <div style="height:14px; background:rgba(255,255,255,0.03); border-radius:3px;"></div>
+          <div style="height:14px; background:rgba(255,255,255,0.03); border-radius:3px;"></div>
+        </div>
+        <div class="ba-desc">포인트 숫자와 사용 버튼이 분리된 구조. 사용처 확인에 별도 탭 이동 필요.</div>
+      </div>
+      <div class="ba-card ba-after">
+        <div class="ba-label">After</div>
+        <div class="ba-screen" style="opacity:1; flex-direction:column; gap:8px; padding:16px;">
+          <div style="background:linear-gradient(135deg, rgba(224,48,48,0.3), rgba(150,20,20,0.3)); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:6px;">
+            <div style="height:10px; width:40%; background:rgba(255,255,255,0.2); border-radius:3px;"></div>
+            <div style="height:22px; width:70%; background:rgba(255,255,255,0.8); border-radius:3px;"></div>
+            <div style="height:28px; background:rgba(255,255,255,0.15); border-radius:8px; margin-top:4px;"></div>
+          </div>
+          <div style="height:40px; background:rgba(224,48,48,0.8); border-radius:10px;"></div>
+          <div style="display:flex; gap:6px;">
+            <div style="flex:1; height:40px; background:rgba(255,255,255,0.05); border-radius:8px;"></div>
+            <div style="flex:1; height:40px; background:rgba(255,255,255,0.05); border-radius:8px;"></div>
+          </div>
+        </div>
+        <div class="ba-desc">포인트 카드 + 즉시 사용 CTA 통합. 원스텝으로 사용처 연결.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ Conclusion -->
+  <div class="cs-block" style="padding-bottom: 80px;">
+    <p class="cs-block-label">06 · Conclusion</p>
+    <h3 class="cs-block-title">기대 효과 &<br><em>결론</em></h3>
+
+    <p class="cs-text">
+      이번 리디자인은 단순한 UI 개선을 넘어, 사용자가 앱에 접속하는 핵심 목적인
+      '혜택의 발견과 즉시 사용'을 최단 경로로 연결하는 구조적 재설계입니다.
+    </p>
+
+    <div class="conclusion-grid">
+      <div class="concl-box">
+        <div class="concl-num">−66%</div>
+        <div class="concl-label">혜택 화면 접근 탭 수<br>3.2회 → 1.1회</div>
+      </div>
+      <div class="concl-box">
+        <div class="concl-num">+15%</div>
+        <div class="concl-label">월간 혜택 사용 건수<br>상승 기대치</div>
+      </div>
+      <div class="concl-box">
+        <div class="concl-num">−38%</div>
+        <div class="concl-label">태스크 기준<br>예상 이탈률 감소</div>
+      </div>
+      <div class="concl-box">
+        <div class="concl-num">32개</div>
+        <div class="concl-label">Figma 컴포넌트<br>상태 포함 라이브러리</div>
+      </div>
+      <div class="concl-box">
+        <div class="concl-num">5→3</div>
+        <div class="concl-label">Bottom Nav 탭<br>통합 후 단순화</div>
+      </div>
+      <div class="concl-box">
+        <div class="concl-num">100%</div>
+        <div class="concl-label">다크 테마 / iOS·Android<br>반응형 가이드 대응</div>
+      </div>
+    </div>
+
+    <div class="cs-callout">
+      <p>
+        <strong>브랜드 이미지 제고:</strong> KT 레드 컬러를 일관되게 적용하고 모던한 타이포그래피 시스템을 도입함으로써,
+        기존의 노후화된 이미지를 탈피하고 <strong>"신뢰할 수 있는 트렌디한 통신사 앱"</strong> 포지셔닝을 강화했습니다.
+        경쟁 서비스 대비 명확한 차별화 포인트로, 신규 가입자의 앱 첫 인상 개선 및 기존 사용자의 재사용률 향상에 기여할 것으로 기대합니다.
+      </p>
     </div>
   </div>
 </section>
