@@ -371,7 +371,7 @@ const CARD_DATA = [
 ];
 
 // ── ORBIT CONFIG ─────────────────────────────────────────
-const N         = CARD_DATA.length;         // 6
+const N         = CARD_DATA.length * 2;     // 12 (6×2 반복)
 const RADIUS    = 300;                      // orbit radius px
 const CARD_W    = 220;
 const CARD_H    = 300;
@@ -394,7 +394,8 @@ let inGrid   = false;
 
 // ── BUILD ORBIT CARDS ────────────────────────────────────
 const stage = document.getElementById('orbit-stage');
-const cardEls = CARD_DATA.map((d, i) => {
+const ORBIT_DATA = [...CARD_DATA, ...CARD_DATA];
+const cardEls = ORBIT_DATA.map((d, i) => {
   const el = document.createElement('div');
   el.className = 'orbit-card';
   el.style.background = d.img
