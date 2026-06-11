@@ -31,10 +31,10 @@ body::after {
 /* ── SCENE ──────────────────────────────── */
 #scene {
   position: fixed;
-  top: 50%; left: 50%;
-  perspective: 1000px;
-  perspective-origin: 50% 50%;
-  transform: translate(-50%, -50%);
+  top: 50%; left: 100%;
+  perspective: 1600px;
+  perspective-origin: -40% 50%;
+  transform: translate(-30%, -50%);
   transition: opacity 0.5s ease;
   z-index: 10;
 }
@@ -49,10 +49,10 @@ body::after {
 /* ── CAROUSEL CARDS ─────────────────────── */
 .card {
   position: absolute;
-  width: 200px;
-  height: 280px;
-  margin-left: -100px;
-  margin-top: -140px;
+  width: 240px;
+  height: 320px;
+  margin-left: -120px;
+  margin-top: -160px;
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
@@ -439,10 +439,9 @@ body::after {
 <script>
 // ── CONFIG ──────────────────────────────────────────────
 const CARD_COUNT      = 6;
-const CARD_W          = 200;
-const CARD_H          = 280;
-// Gap between adjacent cards ≈ 45px  →  r = (CARD_W/2 + 22.5) / tan(π/12)
-const RADIUS          = Math.round((CARD_W / 2 + 22) / Math.tan(Math.PI / CARD_COUNT)); // ~456px
+const CARD_W          = 240;
+const CARD_H          = 320;
+const RADIUS          = 680;
 const DEG_PER_CARD    = 360 / CARD_COUNT; // 30°
 const MS_PER_ROTATION = 36000;
 const DEG_PER_MS      = 360 / MS_PER_ROTATION;
