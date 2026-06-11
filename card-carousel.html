@@ -473,15 +473,18 @@ const PORTFOLIO = [
   { title: 'Personal Branding',       sub: 'Branding · Web Design',   tags: ['Branding','Web Design'],     palette: PALETTES[10] },
 ];
 
-const CARD_DATA = Array.from({length: CARD_COUNT}, (_, i) => ({
-  id: i + 1,
-  num: String(i + 1).padStart(2, '0'),
-  title: PORTFOLIO[i % PORTFOLIO.length].title,
-  sub:   PORTFOLIO[i % PORTFOLIO.length].sub,
-  tags:  PORTFOLIO[i % PORTFOLIO.length].tags,
-  palette: PALETTES[i],
-  img: null,
-}));
+const CARD_DATA = Array.from({length: CARD_COUNT}, (_, i) => {
+  if (i === 0) return {
+    id: 1, num: '01',
+    title: 'KT멤버십 UXUI리디자인',
+    sub: '2025 · UI/UX',
+    tags: ['UI/UX', 'Figma'],
+    palette: PALETTES[0],
+    img: 'images/01_kt-membership.jpg',
+  };
+  const p = PORTFOLIO[(i - 1) % PORTFOLIO.length];
+  return { id: i+1, num: String(i+1).padStart(2,'0'), title: p.title, sub: p.sub, tags: p.tags, palette: PALETTES[i], img: null };
+});
 
 // ── STATE ───────────────────────────────────────────────
 const state = {
