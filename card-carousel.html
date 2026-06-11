@@ -438,7 +438,7 @@ body::after {
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────
-const CARD_COUNT      = 12;
+const CARD_COUNT      = 6;
 const CARD_W          = 200;
 const CARD_H          = 280;
 // Gap between adjacent cards ≈ 45px  →  r = (CARD_W/2 + 22.5) / tan(π/12)
@@ -548,18 +548,19 @@ CARD_DATA.forEach((d, i) => {
 
 // ── BUILD GRID CARDS ────────────────────────────────────
 const gridEl = document.getElementById('grid');
-PORTFOLIO.forEach((d, i) => {
+CARD_DATA.forEach((d, i) => {
   const card = document.createElement('div');
-  card.className = 'grid-card';
-  card.style.background = `linear-gradient(145deg, ${d.palette.bg[0]} 0%, ${d.palette.bg[1]} 100%)`;
+  card.className = d.img ? 'grid-card has-img' : 'grid-card';
+  card.style.background = d.img ? 'transparent' : `linear-gradient(145deg, ${d.palette.bg[0]} 0%, ${d.palette.bg[1]} 100%)`;
   card.style.setProperty('--glow', `rgba(${hexToRgb(d.palette.glow)},0.35)`);
-  const tagHtml = d.tags.map(t => `<span class="card-tag">${t}</span>`).join('');
+  const tagHtml = (d.tags || []).map(t => `<span class="card-tag">${t}</span>`).join('');
   card.innerHTML = `
     <div class="card-top">
+      ${d.img ? `<img src="${d.img}" alt="${d.title}" style="width:100%;height:100%;object-fit:contain;">` : ''}
       <div class="card-tags">${tagHtml}</div>
     </div>
     <div class="card-body">
-      <div class="card-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="card-num">${d.num}</div>
       <div class="card-title">${d.title}</div>
       <div class="card-sub">${d.sub}</div>
     </div>`;
