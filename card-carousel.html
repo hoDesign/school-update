@@ -125,11 +125,11 @@ body {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.15);
   color: rgba(255,255,255,0.8);
-  padding: 10px 18px;
-  border-radius: 8px;
+  padding: 16px 32px;
+  border-radius: 12px;
   cursor: pointer;
   backdrop-filter: blur(12px);
-  font-size: 12px;
+  font-size: 15px;
   font-family: inherit;
   letter-spacing: 0.5px;
   transition: background 0.2s;
@@ -306,13 +306,6 @@ body {
 
 <div id="orbit-stage"></div>
 
-<div id="scroll-hint">scroll to rotate</div>
-
-<div id="indicator">
-  <div id="ind-text">↻ Auto rotating</div>
-  <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
-</div>
-
 <div id="hud">
   <button class="btn" id="gridBtn">▦ &nbsp;Grid view</button>
 </div>
@@ -461,13 +454,7 @@ function positionCards(globalAngle) {
   });
 }
 
-// ── INDICATOR ────────────────────────────────────────────
-const indText = document.getElementById('ind-text');
-const progEl  = document.getElementById('prog');
-function updateInd(text, pct) {
-  indText.textContent = text;
-  progEl.style.width = Math.min(100, pct) + '%';
-}
+function updateInd(text, pct) {}
 
 // ── AUTO LOOP ────────────────────────────────────────────
 function autoLoop(ts) {
@@ -532,18 +519,14 @@ function toGrid() {
   inGrid = true;
   pauseAuto();
   document.getElementById('grid-page').classList.add('show');
-  document.getElementById('scroll-hint').style.opacity = '0';
-  document.getElementById('indicator').style.opacity  = '0';
-  document.getElementById('hud').style.opacity        = '0';
+  document.getElementById('hud').style.opacity = '0';
 }
 
 function toCarousel() {
   if (!inGrid) return;
   inGrid = false;
   document.getElementById('grid-page').classList.remove('show');
-  document.getElementById('scroll-hint').style.opacity = '1';
-  document.getElementById('indicator').style.opacity  = '1';
-  document.getElementById('hud').style.opacity        = '1';
+  document.getElementById('hud').style.opacity = '1';
   accumCCW = 0;
   autoOn   = true;
   lastTs   = null;
