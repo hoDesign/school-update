@@ -112,53 +112,196 @@ body::after {
 .has-img .card-top { background: #f0f0f2; padding: 0; }
 .has-img .card-top img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
-/* ── GRID ───────────────────────────────── */
-/*
-  Grid = normal document flow. Body overflow toggled via JS.
-  Cards: golden ratio 1:1.618, 1920px ref → 597px wide.
-  Responsive: padding absorbs width reduction first, then cards shrink.
-*/
-#grid {
+/* ── GRID PAGE ──────────────────────────── */
+#grid-page {
   display: none;
   width: 100%;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-  align-content: start;
-  padding: 80px 13vw 120px;
+  min-height: 100vh;
+  background: #07070a;
+  position: relative;
+  overflow: hidden;
 }
 
-#grid.show {
-  display: grid;
-  animation: fadeInUp 0.5s ease both;
+#grid-page.show {
+  display: block;
+  animation: fadeInUp 0.6s ease both;
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* blobs */
+.gp-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.gp-blob-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, #c0341a 0%, #e8701a 55%, transparent 75%);
+  top: -80px; left: -120px;
+  opacity: 0.55;
+}
+
+.gp-blob-2 {
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, #1a2ec0 0%, #5030d0 60%, transparent 78%);
+  top: 80px; right: 8%;
+  opacity: 0.35;
+}
+
+.gp-blob-3 {
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, #d04080 0%, #901060 60%, transparent 78%);
+  bottom: 30%; right: 20%;
+  opacity: 0.2;
+}
+
+/* hero */
+#grid-hero {
+  position: relative;
+  z-index: 2;
+  padding: 110px 10vw 80px;
+}
+
+.hero-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 28px;
+}
+
+.hero-title {
+  font-size: clamp(52px, 7.5vw, 110px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 40px;
+}
+
+.hero-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+}
+
+.hero-meta {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.hero-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.8;
+  max-width: 380px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+}
+
+.stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stat-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* section label */
+.section-label {
+  position: relative;
+  z-index: 2;
+  padding: 0 10vw 32px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
+
+/* grid */
+#grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-content: start;
+  padding: 0 10vw 120px;
+  position: relative;
+  z-index: 2;
+}
+
 .grid-card {
-  aspect-ratio: 1 / 1.618;
-  border-radius: 14px;
+  aspect-ratio: 1 / 1.35;
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.06);
   display: flex;
   flex-direction: column;
-  transition: transform 0.25s ease, border-color 0.25s;
-  /* box-shadow set via --glow CSS var */
+  transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s;
+  background: rgba(255,255,255,0.03);
 }
 
 .grid-card:hover {
-  transform: scale(1.02) translateY(-3px);
-  border-color: rgba(255,255,255,0.2);
-  box-shadow: 0 0 50px 14px var(--glow, rgba(100,100,255,0.3));
+  transform: translateY(-6px);
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: 0 0 60px 16px var(--glow, rgba(100,100,255,0.25));
 }
 
-.grid-card .card-top { flex: 1; height: auto; }
-.grid-card .card-body { flex: none; height: 25%; padding: 1.2vw 1.4vw; }
-.grid-card .card-title { font-size: 1.4vw; }
-.grid-card .card-sub   { font-size: 1vw; }
+.grid-card .card-top {
+  flex: 1;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2vw;
+  position: relative;
+}
+
+.card-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.card-tag {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.grid-card .card-body {
+  flex: none;
+  padding: 1vw 2vw 1.8vw;
+  background: rgba(0,0,0,0.2);
+}
+
+.grid-card .card-num  { font-size: 10px; letter-spacing: 0.15em; opacity: 0.25; margin-bottom: 8px; text-transform: uppercase; }
+.grid-card .card-title { font-size: clamp(14px, 1.3vw, 20px); font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; color: rgba(255,255,255,0.9); }
+.grid-card .card-sub   { font-size: clamp(10px, 0.85vw, 13px); color: rgba(255,255,255,0.3); margin-top: 6px; }
 
 /* ── HUD ────────────────────────────────── */
 #hud {
@@ -260,7 +403,27 @@ body::after {
 
 <div id="card-cta">ONE MORE CLICK &nbsp;🖱️</div>
 
-<div id="grid"></div>
+<div id="grid-page">
+  <div class="gp-blob gp-blob-1"></div>
+  <div class="gp-blob gp-blob-2"></div>
+  <div class="gp-blob gp-blob-3"></div>
+
+  <div id="grid-hero">
+    <p class="hero-label">Portfolio — 2025</p>
+    <h1 class="hero-title">Ho Seong<br><em>Park.</em></h1>
+    <div class="hero-meta">
+      <p class="hero-desc">혁신적인 디자인과 탄탄한 구현력을 지향합니다.<br>막연한 추측이 아닌, 실제 사용자의 행동 패턴을 분석하여 불편함의 본질을 찾아냅니다.</p>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">Projects</span></div>
+        <div class="stat-item"><span class="stat-num">100%</span><span class="stat-label">Figma</span></div>
+        <div class="stat-item"><span class="stat-num">95%</span><span class="stat-label">HTML/CSS</span></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label">Archive — Project Collection</p>
+  <div id="grid"></div>
+</div>
 
 <div id="indicator">
   <div id="ind-text">↻ Auto rotating</div>
@@ -301,18 +464,24 @@ const PALETTES = [
   { bg: ['#1f2e0d','#4a6b1a'], glow: '#70b828' },
 ];
 
+const PORTFOLIO = [
+  { title: 'Brand Redesign Project',  sub: 'UI/UX · Figma',          tags: ['UI/UX','Figma'],             palette: PALETTES[2]  },
+  { title: 'E-Commerce Platform',     sub: 'HTML/CSS · JS',           tags: ['HTML/CSS','JavaScript'],     palette: PALETTES[1]  },
+  { title: 'Promotion Landing Page',  sub: 'Photoshop · Illustrator', tags: ['Photoshop','Illustrator'],   palette: PALETTES[4]  },
+  { title: 'Admin Dashboard UI',      sub: 'UI Design · Prototyping', tags: ['UI Design','Prototyping'],   palette: PALETTES[6]  },
+  { title: 'Interactive Web App',     sub: 'Interaction · Tailwind',  tags: ['Interaction','Tailwind CSS'],palette: PALETTES[8]  },
+  { title: 'Personal Branding',       sub: 'Branding · Web Design',   tags: ['Branding','Web Design'],     palette: PALETTES[10] },
+];
+
 const CARD_DATA = Array.from({length: CARD_COUNT}, (_, i) => ({
   id: i + 1,
   num: String(i + 1).padStart(2, '0'),
-  title: `Project ${String(i + 1).padStart(2, '0')}`,
-  sub: '2025 · Design',
+  title: PORTFOLIO[i % PORTFOLIO.length].title,
+  sub:   PORTFOLIO[i % PORTFOLIO.length].sub,
+  tags:  PORTFOLIO[i % PORTFOLIO.length].tags,
   palette: PALETTES[i],
   img: null,
 }));
-
-// 카드별 데이터 오버라이드
-CARD_DATA[0].title = 'KT멤버십 UXUI리디자인';
-CARD_DATA[0].img   = 'images/01_kt-membership.jpg';
 
 // ── STATE ───────────────────────────────────────────────
 const state = {
@@ -376,15 +545,18 @@ CARD_DATA.forEach((d, i) => {
 
 // ── BUILD GRID CARDS ────────────────────────────────────
 const gridEl = document.getElementById('grid');
-CARD_DATA.forEach((d) => {
+PORTFOLIO.forEach((d, i) => {
   const card = document.createElement('div');
-  card.className = d.img ? 'grid-card has-img' : 'grid-card';
-  card.style.background = d.img ? 'transparent' : `linear-gradient(160deg, ${d.palette.bg[0]} 0%, ${d.palette.bg[1]} 100%)`;
-  // CSS var for hover glow
-  card.style.setProperty('--glow', `rgba(${hexToRgb(d.palette.glow)},0.4)`);
+  card.className = 'grid-card';
+  card.style.background = `linear-gradient(145deg, ${d.palette.bg[0]} 0%, ${d.palette.bg[1]} 100%)`;
+  card.style.setProperty('--glow', `rgba(${hexToRgb(d.palette.glow)},0.35)`);
+  const tagHtml = d.tags.map(t => `<span class="card-tag">${t}</span>`).join('');
   card.innerHTML = `
-    <div class="card-top">${d.img ? `<img src="${d.img}" alt="${d.title}">` : ''}</div>
+    <div class="card-top">
+      <div class="card-tags">${tagHtml}</div>
+    </div>
     <div class="card-body">
+      <div class="card-num">${String(i+1).padStart(2,'0')}</div>
       <div class="card-title">${d.title}</div>
       <div class="card-sub">${d.sub}</div>
     </div>`;
@@ -456,7 +628,7 @@ function toGrid() {
   document.body.style.overflow = 'auto';
   document.body.style.height = 'auto';
 
-  gridEl.classList.add('show');
+  document.getElementById('grid-page').classList.add('show');
   document.getElementById('toggleBtn').textContent = '↻  Carousel';
   document.getElementById('scroll-hint').style.opacity = '0';
   document.getElementById('indicator').style.opacity = '0';
@@ -478,7 +650,7 @@ function toCarousel() {
     sceneEl.style.pointerEvents = '';
   });
 
-  gridEl.classList.remove('show');
+  document.getElementById('grid-page').classList.remove('show');
   document.getElementById('toggleBtn').textContent = '▦  Grid view';
   document.getElementById('scroll-hint').style.opacity = '1';
   document.getElementById('indicator').style.opacity = '1';
